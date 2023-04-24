@@ -1,25 +1,44 @@
 import { Form, ActionFunctionArgs, redirect } from 'react-router-dom'
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { UserData } from './Dashboard.tsx';
 
-export async function signUpAction({ request, params }: ActionFunctionArgs) {
-    const { first, last, email, number, password } = Object.fromEntries(
-        (await request.formData()).entries()
-    );
+export type SignupParams = {
+    firstName: string,
+    lastName: string,
+    email: string,
+    mobileNumber: string,
+    password: string
+};
 
-    const { data } = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/user/signup`, {
-        firstName: first,
-        lastName: last,
-        email,
-        mobileNumber: number,
-        password
-    });
-
-    if (data.status != 'error') {
-        return redirect('/login');
+export type SignupResponse = {
+    status: string,
+    payload?: UserData
+    errors?: {
+        message: string
     }
+}
 
-    //TODO: do some error handling
-    return null;
+export async function signUpAction({ request }: ActionFunctionArgs) {
+    const userInput = Object.fromEntries(
+        (await request.formData()).entries()
+    ) as SignupParams;
+
+    try {
+        const { data } = await axios.post<
+            SignupResponse,
+            AxiosResponse<SignupResponse>,
+            SignupParams
+        >(`${import.meta.env.VITE_BASE_URL}/api/v1/user/signup`, userInput);
+
+        if (data.status != 'error') {
+            return redirect('/login');
+        }
+
+        // TODO: do some error handling
+        return null;
+    } catch (e) {
+        throw new Error((e as Error).message);
+    }
 }
 
 export default function SignUp() {

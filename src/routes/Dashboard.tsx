@@ -1,38 +1,54 @@
-import { Form, LoaderFunction, useLoaderData } from 'react-router-dom'
-import axios from 'axios';
+import { useLoaderData, LoaderFunctionArgs } from 'react-router-dom'
+import axios, { AxiosResponse } from 'axios';
 
-export const dashboardLoader: LoaderFunction = async () =>  {
+export type UserData = {
+    admin: boolean,
+    email: string,
+    firstName: string,
+    fullName: string,
+    id: string,
+    lastName: string,
+    mobileNumber: string,
+    profilePicture: string,
+};
+
+export interface DashboardLoader {
+    (args: LoaderFunctionArgs): Promise<UserData | null>
+}
+
+export const dashboardLoader: DashboardLoader = async () => {
     const jwt = localStorage.getItem('jwt');
 
     if (!jwt) {
         return null;
     }
 
-    const { data } = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/user/apiprofile`,
-        {
-        }, {
+    try {
+
+        const { data } = await axios.post<UserData, AxiosResponse<UserData>, {}>(
+            `${import.meta.env.VITE_BASE_URL}/api/v1/user/apiprofile`,
+            {
+            }, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             }
         });
 
-    if (data.status != 'error') {
         return data;
+    } catch (e) {
+        throw new Error((e as Error).message);
     }
 
-    // TODO: do some error handling
-    return null;
 };
 
 export default function SignUp() {
-    const { firstName, lastName } = useLoaderData() || {};
+    const data = useLoaderData() as Awaited<ReturnType<DashboardLoader>>;
 
-    console.log(firstName, lastName);
+    const { fullName } = data || {};
 
-    return firstName && lastName ? (
+    return fullName ? (
         <>
-            <h1>{`Hello ${firstName} ${lastName}`}!</h1>
+            <h1>{`Hello ${fullName}`}!</h1>
         </>
     ) : (
         <>

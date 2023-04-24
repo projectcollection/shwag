@@ -1,25 +1,40 @@
 import { Form, ActionFunctionArgs, redirect } from 'react-router-dom'
+import { UserData } from './Dashboard.tsx';
 import axios from 'axios';
+import { AxiosResponse } from 'axios';
 
-export async function loginAction({ request, params }: ActionFunctionArgs) {
-    const { email, password } = Object.fromEntries(
+export type EmailParams = {
+    email: string,
+    password: string
+};
+
+export type AuthResponse = {
+    status: string,
+    response: string,
+    user: UserData
+}
+
+export async function loginAction({ request }: ActionFunctionArgs) {
+    const userInput = Object.fromEntries(
         (await request.formData()).entries()
-    );
+    ) as EmailParams;
 
-    const { data } = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/v1/user/authenticate`,
-        {
-            email,
-            password
-        });
+    try {
+        const { data } = await axios.post<AuthResponse, AxiosResponse<AuthResponse>, EmailParams>(
+            `${import.meta.env.VITE_BASE_URL}/api/v1/user/authenticate`,
+            userInput
+        );
 
-    if (data.status != 'error') {
-        localStorage.setItem("jwt", data.response);
-        return redirect('/dashboard');
+        if (data.status != 'error') {
+            localStorage.setItem("jwt", data.response);
+            return redirect('/dashboard');
+        }
+
+        // TODO: do some error handling
+        return null;
+    } catch (e) {
+        throw new Error((e as Error).message);
     }
-
-    // TODO: maybe, send error to current page and show error indicator
-    return null;
 }
 
 export default function SignUp() {
