@@ -33,10 +33,41 @@
   }
 }
 
+h1 {
+    padding: 1rem;
+}
+
 .card {
   padding: 2em;
 }
 
+.card > a {
+  margin: .5rem;
+}
+
+#test-form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 2em;
+}
+
+#test-form > p > span {
+  margin-right: 1rem;
+}
+
 .read-the-docs {
   color: #888;
+}
+
+#extra {
+    display: block;
+    max-width: 20rem;
+    width: auto;
+    height: auto;
+    border-radius: 1rem;
+}
+
+#layout {
+    display: flex;
 }

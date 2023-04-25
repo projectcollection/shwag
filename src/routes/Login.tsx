@@ -42,7 +42,7 @@ export default function SignUp() {
         <>
             <Form method="post" id="test-form">
                 <p>
-                    <span>Email</span>
+                    <span>email</span>
                     <input
                         placeholder="email"
                         aria-label="email"

@@ -46,7 +46,7 @@ export default function SignUp() {
         <>
             <Form method="post" id="test-form">
                 <p>
-                    <span>Name</span>
+                    <span>first name</span>
                     <input
                         placeholder="First"
                         aria-label="First name"
@@ -54,6 +54,9 @@ export default function SignUp() {
                         name="first"
                         defaultValue="aroisn"
                     />
+                </p>
+                <p>
+                    <span>last name</span>
                     <input
                         placeholder="Last"
                         aria-label="Last name"
@@ -63,7 +66,7 @@ export default function SignUp() {
                     />
                 </p>
                 <p>
-                    <span>Email</span>
+                    <span>email</span>
                     <input
                         placeholder="email"
                         aria-label="email"
@@ -93,7 +96,7 @@ export default function SignUp() {
                     />
                 </p>
                 <p>
-                    <button type="submit">Signup</button>
+                    <button type="submit">signup</button>
                 </p>
             </Form>
         </>

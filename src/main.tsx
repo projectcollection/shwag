@@ -6,27 +6,32 @@ import App from './App.tsx'
 import Signup, { signUpAction } from './routes/Signup.tsx'
 import Login, { loginAction } from './routes/Login.tsx'
 import Dashboard, { dashboardLoader } from './routes/Dashboard.tsx'
+import ErrorPage from './routes/ErrorPage.tsx'
 import './index.css'
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <App />,
-    },
-    {
-        path: 'dashboard',
-        loader: dashboardLoader,
-        element: <Dashboard/>
-    },
-    {
-        path: 'signup',
-        action: signUpAction,
-        element: <Signup/>
-    },
-    {
-        path: 'login',
-        action: loginAction,
-        element: <Login />
+        errorElement: <ErrorPage/>,
+        children: [
+            {
+                path: 'dashboard',
+                loader: dashboardLoader,
+                element: <Dashboard />
+            },
+            {
+                path: 'signup',
+                action: signUpAction,
+                element: <Signup />
+            },
+            {
+                path: 'login',
+                action: loginAction,
+                element: <Login />
+            },
+
+        ]
     },
 ]);
 

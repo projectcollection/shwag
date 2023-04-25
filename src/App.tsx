@@ -1,35 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+    const { pathname } = useLocation();
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Container it</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <>
+            <div id="layout">
+                <div>
+                    <img src="https://wips.art/cdn/images%2FO8y5i3rtfhNlmM2UrQc18lFOD222%2Feopekxtjwthdm3qhbvxoga_image.png" id="extra" />
+                </div>
+                <div>
+                    <div>
+                        <h1>test react</h1>
+                    </div>
+                    <div className="card">
+                        {pathname != '/signup' && <Link to='/signup'>signup</Link>}
+                        {pathname != '/login' && <Link to='/login'>login</Link>}
+                        {pathname != '/dashboard' && <Link to='/dashboard'>dash</Link>}
+                    </div>
+                    <Outlet />
+                </div>
+            </div>
+        </>
+    )
 }
 
 export default App
