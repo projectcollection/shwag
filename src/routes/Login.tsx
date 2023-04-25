@@ -1,6 +1,7 @@
-import { Form, ActionFunctionArgs, redirect } from 'react-router-dom'
+import { Form, ActionFunctionArgs, redirect, useNavigation } from 'react-router-dom'
 
 import { login, LoginParams } from '../authApi.ts';
+import Spinner from '../components/Spinner.tsx';
 
 export async function loginAction({ request }: ActionFunctionArgs) {
     const userInput = Object.fromEntries(
@@ -23,33 +24,43 @@ export async function loginAction({ request }: ActionFunctionArgs) {
 }
 
 export default function SignUp() {
+    const navigation = useNavigation();
+
     return (
         <>
-            <Form method="post" id="test-form">
-                <p>
-                    <span>email</span>
-                    <input
-                        placeholder="email"
-                        aria-label="email"
-                        type="email"
-                        name="email"
-                        defaultValue="test2@email.com"
-                    />
-                </p>
-                <p>
-                    <span>password</span>
-                    <input
-                        placeholder="password"
-                        aria-label="password"
-                        type="password"
-                        name="password"
-                        defaultValue="1234"
-                    />
-                </p>
-                <p>
-                    <button type="submit">Login</button>
-                </p>
-            </Form>
+
+            {navigation.state === 'submitting' ?
+                (
+                    <Spinner />
+                ) :
+                (
+                    <Form method="post" id="test-form">
+                        <p>
+                            <span>email</span>
+                            <input
+                                placeholder="email"
+                                aria-label="email"
+                                type="email"
+                                name="email"
+                                defaultValue="test2@email.com"
+                            />
+                        </p>
+                        <p>
+                            <span>password</span>
+                            <input
+                                placeholder="password"
+                                aria-label="password"
+                                type="password"
+                                name="password"
+                                defaultValue="1234"
+                            />
+                        </p>
+                        <p>
+                            <button type="submit">Login</button>
+                        </p>
+                    </Form>
+                )
+            }
         </>
     );
 }
