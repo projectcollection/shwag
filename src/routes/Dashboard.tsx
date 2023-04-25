@@ -20,10 +20,11 @@ export const dashboardLoader: DashboardLoader = async () => {
 export default function SignUp() {
     const data = useLoaderData() as Awaited<ReturnType<DashboardLoader>>;
 
-    const { fullName } = data || {};
+    const { fullName, profilePicture } = data || {};
 
     return fullName ? (
         <>
+            <img src={profilePicture} id="profpic"/>
             <h1>{`Hello ${fullName}`}!</h1>
             <button onClick={logout}>logout</button>
         </>
