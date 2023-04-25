@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+const JWT = 'jwt';
 
 export type UserData = {
     admin: boolean,
@@ -60,8 +61,13 @@ export async function login(userInfo: LoginParams) {
     return data;
 }
 
+export function logout() {
+    localStorage.removeItem(JWT);
+    window.location.reload();
+}
+
 export async function getUserData() {
-    const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem(JWT);
 
     if (!jwt) {
         return null;

@@ -1,6 +1,6 @@
 import { useLoaderData, LoaderFunctionArgs } from 'react-router-dom'
 
-import { getUserData, UserData} from '../authApi.ts';
+import { getUserData, logout, UserData } from '../authApi.ts';
 
 export interface DashboardLoader {
     (args: LoaderFunctionArgs): Promise<UserData | null>
@@ -25,6 +25,7 @@ export default function SignUp() {
     return fullName ? (
         <>
             <h1>{`Hello ${fullName}`}!</h1>
+            <button onClick={logout}>logout</button>
         </>
     ) : (
         <>
