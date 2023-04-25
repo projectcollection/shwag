@@ -1,48 +1,63 @@
+import { z } from 'zod';
 import axios, { AxiosResponse } from 'axios';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const JWT = 'jwt';
 
-export type UserData = {
-    admin: boolean,
-    email: string,
-    firstName: string,
-    fullName: string,
-    id: string,
-    lastName: string,
-    mobileNumber: string,
-    profilePicture: string,
-};
+const UserDataSchema = z.object({
+    admin: z.boolean(),
+    email: z.string().email(),
+    firstName: z.string(),
+    fullName: z.string(),
+    id: z.string(),
+    lastName: z.string(),
+    mobileNumber: z.string(),
+    profilePicture: z.string(),
+});
 
-export type SignupParams = {
-    firstName: string,
-    lastName: string,
-    email: string,
-    mobileNumber: string,
-    password: string
-};
+export type UserData = z.infer<typeof UserDataSchema>;
 
-export type SignupResponse = {
-    status: string,
-    payload?: UserData
-    errors?: {
-        message: string
-    }
-}
+const SignupParamsSchema = z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+    email: z.string().email(),
+    mobileNumber: z.string(),
+    password: z.string()
+});
 
-export type LoginParams = {
-    email: string,
-    password: string
-};
+export type SignupParams = z.infer<typeof SignupParamsSchema>;
 
-export type LoginResponse = {
-    status: string,
-    response: string,
-    user: UserData
-}
+const SignupResponseSchema = z.object({
+    status: z.string(),
+    payload: UserDataSchema,
+    errors: z.object({
+        message: z.string()
+    })
+}).partial({
+    payload: true,
+    errors: true
+});
 
+export type SignupResponse = z.infer<typeof SignupResponseSchema>;
+
+const LoginParamsSchema = z.object({
+    email: z.string().email(),
+    password: z.string()
+});
+
+export type LoginParams = z.infer<typeof LoginParamsSchema>;
+
+const LoginResponseSchema = z.object({
+    status: z.string(),
+    response: z.string(),
+    user: UserDataSchema
+});
+
+export type LoginResponse = z.infer<typeof LoginResponseSchema>;
 
 export async function signup(userInfo: SignupParams) {
+    SignupParamsSchema.parse(userInfo);
+
     const { data } = await axios.post<
         SignupResponse,
         AxiosResponse<SignupResponse>,
@@ -53,6 +68,8 @@ export async function signup(userInfo: SignupParams) {
 }
 
 export async function login(userInfo: LoginParams) {
+    LoginParamsSchema.parse(userInfo);
+
     const { data } = await axios.post<LoginResponse, AxiosResponse<LoginResponse>, LoginParams>(
         `${BASE_URL}/api/v1/user/authenticate`,
         userInfo

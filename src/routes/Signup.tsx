@@ -8,6 +8,7 @@ export async function signUpAction({ request }: ActionFunctionArgs) {
     ) as SignupParams;
 
     try {
+        console.log(userInput);
         const data = await signup(userInput);
         if (data.status != 'error') {
             return redirect('/login');
@@ -30,7 +31,7 @@ export default function SignUp() {
                         placeholder="First"
                         aria-label="First name"
                         type="text"
-                        name="first"
+                        name="firstName"
                         defaultValue="aroisn"
                     />
                 </p>
@@ -40,7 +41,7 @@ export default function SignUp() {
                         placeholder="Last"
                         aria-label="Last name"
                         type="text"
-                        name="last"
+                        name="lastName"
                         defaultValue="aroisn"
                     />
                 </p>
@@ -60,7 +61,7 @@ export default function SignUp() {
                         placeholder="number"
                         aria-label="number"
                         type="text"
-                        name="number"
+                        name="mobileNumber"
                         defaultValue="1234"
                     />
                 </p>
