@@ -1,22 +1,6 @@
 import { Form, ActionFunctionArgs, redirect } from 'react-router-dom'
-import axios, { AxiosResponse } from 'axios';
-import { UserData } from './Dashboard.tsx';
 
-export type SignupParams = {
-    firstName: string,
-    lastName: string,
-    email: string,
-    mobileNumber: string,
-    password: string
-};
-
-export type SignupResponse = {
-    status: string,
-    payload?: UserData
-    errors?: {
-        message: string
-    }
-}
+import { signup, SignupParams } from '../authApi.ts';
 
 export async function signUpAction({ request }: ActionFunctionArgs) {
     const userInput = Object.fromEntries(
@@ -24,12 +8,7 @@ export async function signUpAction({ request }: ActionFunctionArgs) {
     ) as SignupParams;
 
     try {
-        const { data } = await axios.post<
-            SignupResponse,
-            AxiosResponse<SignupResponse>,
-            SignupParams
-        >(`${import.meta.env.VITE_BASE_URL}/api/v1/user/signup`, userInput);
-
+        const data = await signup(userInput);
         if (data.status != 'error') {
             return redirect('/login');
         }

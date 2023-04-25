@@ -1,29 +1,14 @@
 import { Form, ActionFunctionArgs, redirect } from 'react-router-dom'
-import { UserData } from './Dashboard.tsx';
-import axios from 'axios';
-import { AxiosResponse } from 'axios';
 
-export type EmailParams = {
-    email: string,
-    password: string
-};
-
-export type AuthResponse = {
-    status: string,
-    response: string,
-    user: UserData
-}
+import { login, LoginParams } from '../authApi.ts';
 
 export async function loginAction({ request }: ActionFunctionArgs) {
     const userInput = Object.fromEntries(
         (await request.formData()).entries()
-    ) as EmailParams;
+    ) as LoginParams;
 
     try {
-        const { data } = await axios.post<AuthResponse, AxiosResponse<AuthResponse>, EmailParams>(
-            `${import.meta.env.VITE_BASE_URL}/api/v1/user/authenticate`,
-            userInput
-        );
+        const data = await login(userInput);
 
         if (data.status != 'error') {
             localStorage.setItem("jwt", data.response);
