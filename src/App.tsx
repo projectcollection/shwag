@@ -1,4 +1,6 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
+
+import Counter from './components/Counter';
 import './App.css'
 
 function App() {
@@ -22,6 +24,7 @@ function App() {
                     <Outlet />
                 </div>
             </div>
+            <Counter />
         </>
     )
 }

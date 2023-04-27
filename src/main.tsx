@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Provider as ReduxProvider } from 'react-redux';
 
 import App from './App.tsx'
 import Signup, { signUpAction } from './routes/Signup.tsx'
@@ -8,12 +9,13 @@ import Login, { loginAction } from './routes/Login.tsx'
 import Dashboard, { dashboardLoader } from './routes/Dashboard.tsx'
 import ErrorPage from './routes/ErrorPage.tsx'
 import './index.css'
+import { store } from './redux/store.ts';
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <App />,
-        errorElement: <ErrorPage/>,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: 'dashboard',
@@ -37,6 +39,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <ReduxProvider store={store}>
+            <RouterProvider router={router} />
+        </ReduxProvider>
     </React.StrictMode>,
 )
