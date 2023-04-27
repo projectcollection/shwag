@@ -4,30 +4,31 @@ import axios, { AxiosResponse } from 'axios';
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const JWT = 'jwt';
 
-const UserDataSchema = z.object({
+export const UserDataSchema = z.object({
     admin: z.boolean(),
     email: z.string().email(),
-    firstName: z.string(),
-    fullName: z.string(),
+    firstName: z.string().max(20),
+    fullName: z.string().max(20),
     id: z.string(),
     lastName: z.string(),
-    mobileNumber: z.string(),
+    mobileNumber: z.string().max(10),
     profilePicture: z.string(),
+    password: z.string()
 });
 
 export type UserData = z.infer<typeof UserDataSchema>;
 
-const SignupParamsSchema = z.object({
-    firstName: z.string(),
-    lastName: z.string(),
-    email: z.string().email(),
-    mobileNumber: z.string(),
-    password: z.string()
+export const SignupParamsSchema = UserDataSchema.pick({
+    firstName: true,
+    lastName: true,
+    email: true,
+    mobileNumber: true,
+    password: true
 });
 
 export type SignupParams = z.infer<typeof SignupParamsSchema>;
 
-const SignupResponseSchema = z.object({
+export const SignupResponseSchema = z.object({
     status: z.string(),
     payload: UserDataSchema,
     errors: z.object({
@@ -40,9 +41,9 @@ const SignupResponseSchema = z.object({
 
 export type SignupResponse = z.infer<typeof SignupResponseSchema>;
 
-const LoginParamsSchema = z.object({
-    email: z.string().email(),
-    password: z.string()
+export const LoginParamsSchema = UserDataSchema.pick({
+    email: true,
+    password: true
 });
 
 export type LoginParams = z.infer<typeof LoginParamsSchema>;
