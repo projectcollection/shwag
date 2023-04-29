@@ -2,7 +2,8 @@ import { Form, ActionFunctionArgs, redirect, useNavigation, useSubmit } from 're
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { signup, SignupParams, SignupParamsSchema } from '../authApi.ts';
+import { useSignUpUserMutation, authApi, SignupParams, SignupParamsSchema } from '../redux/services/auth.ts';
+import { store } from '../redux/store.ts';
 import Spinner from '../components/Spinner.tsx';
 
 export async function signUpAction({ request }: ActionFunctionArgs) {
@@ -11,10 +12,14 @@ export async function signUpAction({ request }: ActionFunctionArgs) {
     ) as SignupParams;
 
     try {
-        const data = await signup(userInput);
-        if (data.status != 'error') {
-            return redirect('/login');
-        }
+        const data = await store.dispatch(authApi.endpoints.signUpUser.initiate(userInput));
+
+
+
+        console.log("the data", data);
+        //if (data.status != 'error') {
+        //    return redirect('/login');
+        //}
 
         // TODO: do some error handling
         return null;
@@ -47,26 +52,15 @@ export default function SignUp() {
                 (
                     <Form onSubmit={handleSubmit(onSubmit)} method="post" id="test-form">
                         <p>
-                            <span>first name</span>
+                            <span>name</span>
                             <input
                                 placeholder="First"
                                 aria-label="First name"
                                 type="text"
                                 defaultValue="aroisn"
-                                {...register('firstName')}
+                                {...register('name')}
                             />
-                            {errors.firstName?.message}
-                        </p>
-                        <p>
-                            <span>last name</span>
-                            <input
-                                placeholder="Last"
-                                aria-label="Last name"
-                                type="text"
-                                defaultValue="aroisn"
-                                {...register('lastName')}
-                            />
-                            {errors.lastName?.message}
+                            {errors.name?.message}
                         </p>
                         <p>
                             <span>email</span>
@@ -75,20 +69,9 @@ export default function SignUp() {
                                 aria-label="email"
                                 type="email"
                                 defaultValue="test@email.com"
-                                {...register('lastName')}
+                                {...register('email')}
                             />
                             {errors.email?.message}
-                        </p>
-                        <p>
-                            <span>number</span>
-                            <input
-                                placeholder="number"
-                                aria-label="number"
-                                type="text"
-                                defaultValue="1234"
-                                {...register('mobileNumber')}
-                            />
-                            {errors.mobileNumber?.message}
                         </p>
                         <p>
                             <span>password</span>
@@ -96,10 +79,21 @@ export default function SignUp() {
                                 placeholder="password"
                                 aria-label="password"
                                 type="password"
-                                defaultValue="1234"
+                                defaultValue="11111111"
                                 {...register('password')}
                             />
                             {errors.password?.message}
+                        </p>
+                        <p>
+                            <span>confirm password</span>
+                            <input
+                                placeholder="password"
+                                aria-label="password"
+                                type="password"
+                                defaultValue="11111111"
+                                {...register('passwordConfirm')}
+                            />
+                            {errors.passwordConfirm?.message}
                         </p>
                         <p>
                             <button type="submit">signup</button>

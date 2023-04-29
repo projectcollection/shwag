@@ -1,14 +1,20 @@
 import type { RootState } from '../redux/store'
 import { useSelector, useDispatch } from 'react-redux'
+import { useEffect } from 'react'
 
 import { decrement, increment } from '../redux/slices/countSlice'
-import { useGetPokemonByNameQuery } from '../redux/services/auth'
+import { useGetPokemonByNameQuery, useSignUpUserMutation } from '../redux/services/auth'
 
 export default function Counter() {
     const count = useSelector((state: RootState) => state.counter.value)
     const dispatch = useDispatch()
 
     const { data, error, isLoading } = useGetPokemonByNameQuery('bulbasaur');
+    const [, { data: signupData }] = useSignUpUserMutation();
+
+    useEffect(() => {
+        console.log(signupData);
+    }, [signupData]);
 
     return (
         <div>

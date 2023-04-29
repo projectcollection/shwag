@@ -8,6 +8,7 @@ import Signup, { signUpAction } from './routes/Signup.tsx'
 import Login, { loginAction } from './routes/Login.tsx'
 import Dashboard, { dashboardLoader } from './routes/Dashboard.tsx'
 import ErrorPage from './routes/ErrorPage.tsx'
+import Verification from './routes/Verification.tsx'
 import './index.css'
 import { store } from './redux/store.ts';
 
@@ -32,7 +33,10 @@ const router = createBrowserRouter([
                 action: loginAction,
                 element: <Login />
             },
-
+            {
+                path: '/verifyemail/:verificationCode',
+                element: <Verification/>
+            }
         ]
     },
 ]);
