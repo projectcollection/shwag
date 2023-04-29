@@ -2,7 +2,7 @@ import { Form, ActionFunctionArgs, redirect, useNavigation, useSubmit } from 're
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useSignUpUserMutation, authApi, SignupParams, SignupParamsSchema } from '../redux/services/auth.ts';
+import { authApi, SignupParams, SignupParamsSchema } from '../redux/services/auth.ts';
 import { store } from '../redux/store.ts';
 import Spinner from '../components/Spinner.tsx';
 
@@ -12,14 +12,15 @@ export async function signUpAction({ request }: ActionFunctionArgs) {
     ) as SignupParams;
 
     try {
-        const data = await store.dispatch(authApi.endpoints.signUpUser.initiate(userInput));
+        const res = await store.dispatch(authApi.endpoints.signUpUser.initiate(userInput));
 
-
-
-        console.log("the data", data);
-        //if (data.status != 'error') {
-        //    return redirect('/login');
-        //}
+        if ('data' in res && res.data.status === 'success') {
+            //todo: toast maybe
+            alert('success');
+            //return redirect('/login');
+        } else {
+            alert('fail');
+        }
 
         // TODO: do some error handling
         return null;

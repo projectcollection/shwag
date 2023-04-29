@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 export default function Confirmation() {
     const { verificationCode } = useParams();
-    const [verify, { isLoading, isSuccess, error, data }] = useVerifyMutation();
+    const [verify, { error, data }] = useVerifyMutation();
 
     useEffect(() => {
         if (verificationCode) {
@@ -16,7 +16,12 @@ export default function Confirmation() {
     return (
         <div>
             <div>
-                {isLoading ? "verifying" : "verified"}
+                {
+                    error &&
+                    'data' in error &&
+                    (error.data as { status: string, message: string }).message
+                }
+                {data && data.message}
             </div>
         </div>
     )

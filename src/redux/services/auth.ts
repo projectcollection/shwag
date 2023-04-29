@@ -17,21 +17,6 @@ export const SignupParamsSchema = z.object({
 
 export type SignupParams = z.infer<typeof SignupParamsSchema>;
 
-export type Pokemon = {
-    abilities: { ability: { name: string, url: string }, is_hidden: boolean }[]
-};
-
-// Define a service using a base URL and expected endpoints
-export const pokemonApi = createApi({
-    reducerPath: 'pokemonApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
-    endpoints: (builder) => ({
-        getPokemonByName: builder.query<Pokemon, string>({
-            query: (name) => `pokemon/${name}`,
-        }),
-    }),
-})
-
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({ baseUrl: `${BASE_URL}/api/auth/` }),
@@ -57,5 +42,4 @@ export const authApi = createApi({
 //
 // note: seems this is the only way to get data directly when using rtk-query
 // store.getState() shows methods and such, not the data itself
-export const { useGetPokemonByNameQuery } = pokemonApi;
 export const { useSignUpUserMutation, useVerifyMutation } = authApi;
