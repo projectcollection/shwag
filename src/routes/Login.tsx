@@ -17,8 +17,7 @@ export async function loginAction({ request }: ActionFunctionArgs) {
         if ('data' in res && res.data.status === 'success') {
             //todo: toast maybe
             localStorage.setItem("jwt", res.data.access_token);
-            alert('success');
-            //return redirect('/dashboard');
+            return redirect('/dashboard');
         } else {
             alert('fail');
         }

@@ -1,31 +1,33 @@
-import { useLoaderData, LoaderFunctionArgs } from 'react-router-dom'
+import { useLoaderData, redirect, LoaderFunctionArgs } from 'react-router-dom'
 
-import { getUserData, logout, UserData } from '../authApi.ts';
+import { userApi, UserData, BASE_URL, logout } from '../redux/services/auth.ts';
+import { store } from '../redux/store.ts';
 
 export interface DashboardLoader {
-    (args: LoaderFunctionArgs): Promise<UserData | null>
+    (args: LoaderFunctionArgs): Promise<{ status: string, user?: UserData }>
 }
 
-export const dashboardLoader: DashboardLoader = async () => {
+export const dashboardLoader = async () => {
     try {
-        const data = await getUserData();
-
-        return data;
+        const res = await store.dispatch(userApi.endpoints.me.initiate());
+        if (res.status != 'rejected') {
+            return res.data?.data;
+        } else {
+            return redirect('/login');
+        }
     } catch (e) {
         throw new Error((e as Error).message);
     }
-
 };
 
-export default function SignUp() {
-    const data = useLoaderData() as Awaited<ReturnType<DashboardLoader>>;
+export default function DashBoard() {
+    const { user } = useLoaderData() as Awaited<ReturnType<DashboardLoader>>;
+    const { name, photo } = user || {};
 
-    const { fullName, profilePicture } = data || {};
-
-    return fullName ? (
+    return name ? (
         <>
-            <img src={profilePicture} id="profpic"/>
-            <h1>{`Hello ${fullName}`}!</h1>
+            <img src={`${BASE_URL}/api/static/users/${photo}`} id="profpic" />
+            <h1>{`Hello ${name}`}!</h1>
             <button onClick={logout}>logout</button>
         </>
     ) : (

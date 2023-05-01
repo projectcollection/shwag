@@ -1,7 +1,9 @@
-import { z } from 'zod';
+import { boolean, z } from 'zod';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { redirect } from 'react-router-dom';
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+export const BASE_URL = import.meta.env.VITE_BASE_URL;
+export const JWT = 'jwt';
 
 export const SignupParamsSchema = z.object({
     email: z.string().email(),
@@ -25,6 +27,20 @@ export const LoginParamsSchema = z.object({
 });
 
 export type LoginParams = z.infer<typeof LoginParamsSchema>;
+
+export const UserDataSchema = z.object({
+    "name": z.string(),
+    "email": z.string(),
+    "role": z.string(),
+    "photo": z.string(),
+    "verified": z.boolean(),
+    "provider": z.string(),
+    "createdAt": z.string(),
+    "updatedAt": z.string(),
+    "id": z.string(),
+});
+
+export type UserData = z.infer<typeof UserDataSchema>;
 
 export const authApi = createApi({
     reducerPath: 'authApi',
@@ -53,9 +69,33 @@ export const authApi = createApi({
     }),
 })
 
+export const userApi = createApi({
+    reducerPath: 'userApi',
+    baseQuery: fetchBaseQuery({
+        baseUrl: `${BASE_URL}/api/users/`, prepareHeaders: (headers) => {
+            headers.set('Authorization', `Bearer ${localStorage.getItem(JWT)}`);
+
+            return headers;
+        },
+        credentials: 'include'
+    }),
+    endpoints: (builder) => ({
+        me: builder.query<{ status: string, data: UserData }, void>({
+            query: () => `me`,
+        })
+    }),
+})
+
+export function logout() {
+    localStorage.removeItem(JWT);
+    redirect('/login');
+    //window.location.reload();
+}
+
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 //
 // note: seems this is the only way to get data directly when using rtk-query
 // store.getState() shows methods and such, not the data itself
 export const { useSignUpUserMutation, useLoginUserMutation, useVerifyMutation } = authApi;
+export const { useMeQuery } = userApi;
