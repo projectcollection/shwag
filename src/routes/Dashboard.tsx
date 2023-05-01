@@ -1,6 +1,6 @@
-import { useLoaderData, redirect, LoaderFunctionArgs } from 'react-router-dom'
+import { Form, useLoaderData, redirect, LoaderFunctionArgs } from 'react-router-dom'
 
-import { userApi, UserData, BASE_URL, logout } from '../redux/services/auth.ts';
+import { userApi, UserData, BASE_URL, JWT } from '../redux/services/auth.ts';
 import { store } from '../redux/store.ts';
 
 export interface DashboardLoader {
@@ -20,6 +20,11 @@ export const dashboardLoader = async () => {
     }
 };
 
+export async function logoutAction() {
+    localStorage.removeItem(JWT);
+    return redirect('/login');
+}
+
 export default function DashBoard() {
     const { user } = useLoaderData() as Awaited<ReturnType<DashboardLoader>>;
     const { name, photo } = user || {};
@@ -28,7 +33,10 @@ export default function DashBoard() {
         <>
             <img src={`${BASE_URL}/api/static/users/${photo}`} id="profpic" />
             <h1>{`Hello ${name}`}!</h1>
-            <button onClick={logout}>logout</button>
+
+            <Form method='post' action='/dashboard'>
+                <button type='submit'>logout</button>
+            </Form>
         </>
     ) : (
         <>

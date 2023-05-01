@@ -1,6 +1,5 @@
-import { boolean, z } from 'zod';
+import { z } from 'zod';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { redirect } from 'react-router-dom';
 
 export const BASE_URL = import.meta.env.VITE_BASE_URL;
 export const JWT = 'jwt';
@@ -85,12 +84,6 @@ export const userApi = createApi({
         })
     }),
 })
-
-export function logout() {
-    localStorage.removeItem(JWT);
-    redirect('/login');
-    //window.location.reload();
-}
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints

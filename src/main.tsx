@@ -6,7 +6,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import App from './App.tsx'
 import Signup, { signUpAction } from './routes/Signup.tsx'
 import Login, { loginAction } from './routes/Login.tsx'
-import Dashboard, { dashboardLoader } from './routes/Dashboard.tsx'
+import Dashboard, { dashboardLoader, logoutAction } from './routes/Dashboard.tsx'
 import ErrorPage from './routes/ErrorPage.tsx'
 import Verification from './routes/Verification.tsx'
 import './index.css'
@@ -21,6 +21,7 @@ const router = createBrowserRouter([
             {
                 path: 'dashboard',
                 loader: dashboardLoader,
+                action: logoutAction,
                 element: <Dashboard />
             },
             {
