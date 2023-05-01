@@ -17,7 +17,7 @@ function App() {
                     </div>
                     <div className="card">
                         {pathname != '/signup' && <Link to='/signup'>signup</Link>}
-                        {/*pathname != '/login' && <Link to='/login'>login</Link>*/}
+                        {pathname != '/login' && <Link to='/login'>login</Link>}
                         {/*pathname != '/dashboard' && <Link to='/dashboard'>dash</Link>*/}
                     </div>
                     <Outlet />

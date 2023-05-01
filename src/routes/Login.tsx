@@ -2,7 +2,8 @@ import { Form, ActionFunctionArgs, redirect, useNavigation, useSubmit } from 're
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { login, LoginParams, LoginParamsSchema } from '../authApi.ts';
+import { authApi, LoginParams, LoginParamsSchema} from '../redux/services/auth.ts';
+import { store } from '../redux/store.ts';
 import Spinner from '../components/Spinner.tsx';
 
 export async function loginAction({ request }: ActionFunctionArgs) {
@@ -11,11 +12,15 @@ export async function loginAction({ request }: ActionFunctionArgs) {
     ) as LoginParams;
 
     try {
-        const data = await login(userInput);
+        const res = await store.dispatch(authApi.endpoints.loginUser.initiate(userInput));
 
-        if (data.status != 'error') {
-            localStorage.setItem("jwt", data.response);
-            return redirect('/dashboard');
+        if ('data' in res && res.data.status === 'success') {
+            //todo: toast maybe
+            localStorage.setItem("jwt", res.data.access_token);
+            alert('success');
+            //return redirect('/dashboard');
+        } else {
+            alert('fail');
         }
 
         // TODO: do some error handling
@@ -52,7 +57,6 @@ export default function SignUp() {
                             <input
                                 placeholder="email"
                                 aria-label="email"
-                                //type="email"
                                 defaultValue="test2@email.com"
                                 {...register("email")}
                             />
@@ -64,7 +68,7 @@ export default function SignUp() {
                                 placeholder="password"
                                 aria-label="password"
                                 type="password"
-                                defaultValue="1234"
+                                defaultValue="11111111"
                                 {...register("password")}
                             />
                             {errors.password?.message}

@@ -17,6 +17,15 @@ export const SignupParamsSchema = z.object({
 
 export type SignupParams = z.infer<typeof SignupParamsSchema>;
 
+export const LoginParamsSchema = z.object({
+    email: z.string().email(),
+    password: z.string()
+        .min(8, "8 characters minimum")
+        .max(32, "Must be less than 30 characters"),
+});
+
+export type LoginParams = z.infer<typeof LoginParamsSchema>;
+
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({ baseUrl: `${BASE_URL}/api/auth/` }),
@@ -24,6 +33,13 @@ export const authApi = createApi({
         signUpUser: builder.mutation<{ status: string, message: string }, SignupParams>({
             query: (data) => ({
                 url: 'register',
+                method: 'POST',
+                body: data
+            }),
+        }),
+        loginUser: builder.mutation<{ status: string, access_token: string }, LoginParams>({
+            query: (data) => ({
+                url: 'login',
                 method: 'POST',
                 body: data
             }),
@@ -42,4 +58,4 @@ export const authApi = createApi({
 //
 // note: seems this is the only way to get data directly when using rtk-query
 // store.getState() shows methods and such, not the data itself
-export const { useSignUpUserMutation, useVerifyMutation } = authApi;
+export const { useSignUpUserMutation, useLoginUserMutation, useVerifyMutation } = authApi;
