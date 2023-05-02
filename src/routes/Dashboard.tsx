@@ -1,6 +1,6 @@
 import { Form, useLoaderData, redirect, LoaderFunctionArgs } from 'react-router-dom'
 
-import { userApi, UserData, BASE_URL, JWT } from '../redux/services/auth.ts';
+import { authApi, userApi, UserData, BASE_URL, JWT } from '../redux/services/auth.ts';
 import { store } from '../redux/store.ts';
 
 export interface DashboardLoader {
@@ -13,6 +13,12 @@ export const dashboardLoader = async () => {
         if (res.status != 'rejected') {
             return res.data?.data;
         } else {
+            const refreshRes = await store.dispatch(authApi.endpoints.refresh.initiate());
+
+            if (res.data?.status != 'rejected') {
+                localStorage.setItem(JWT, refreshRes.data?.access_token || '');
+                return redirect('/dashboard');
+            }
             return redirect('/login');
         }
     } catch (e) {

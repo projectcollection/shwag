@@ -43,7 +43,10 @@ export type UserData = z.infer<typeof UserDataSchema>;
 
 export const authApi = createApi({
     reducerPath: 'authApi',
-    baseQuery: fetchBaseQuery({ baseUrl: `${BASE_URL}/api/auth/` }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: `${BASE_URL}/api/auth/`,
+        credentials: 'include'
+    }),
     endpoints: (builder) => ({
         signUpUser: builder.mutation<{ status: string, message: string }, SignupParams>({
             query: (data) => ({
@@ -56,7 +59,13 @@ export const authApi = createApi({
             query: (data) => ({
                 url: 'login',
                 method: 'POST',
-                body: data
+                body: data,
+            }),
+        }),
+        refresh: builder.query<{ status: string, access_token: string }, void>({
+            query: () => ({
+                url: 'refresh',
+                method: 'GET',
             }),
         }),
         verify: builder.mutation<{ status: string, message: string }, string>({
@@ -90,5 +99,5 @@ export const userApi = createApi({
 //
 // note: seems this is the only way to get data directly when using rtk-query
 // store.getState() shows methods and such, not the data itself
-export const { useSignUpUserMutation, useLoginUserMutation, useVerifyMutation } = authApi;
+export const { useSignUpUserMutation, useLoginUserMutation, useVerifyMutation, useRefreshMutation } = authApi;
 export const { useMeQuery } = userApi;

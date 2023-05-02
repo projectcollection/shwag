@@ -2,7 +2,7 @@ import { Form, ActionFunctionArgs, redirect, useNavigation, useSubmit } from 're
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { authApi, LoginParams, LoginParamsSchema} from '../redux/services/auth.ts';
+import { authApi, LoginParams, LoginParamsSchema, JWT } from '../redux/services/auth.ts';
 import { store } from '../redux/store.ts';
 import Spinner from '../components/Spinner.tsx';
 
@@ -16,7 +16,7 @@ export async function loginAction({ request }: ActionFunctionArgs) {
 
         if ('data' in res && res.data.status === 'success') {
             //todo: toast maybe
-            localStorage.setItem("jwt", res.data.access_token);
+            localStorage.setItem(JWT, res.data.access_token);
             return redirect('/dashboard');
         } else {
             alert('fail');
