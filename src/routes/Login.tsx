@@ -2,7 +2,7 @@ import { Form, ActionFunctionArgs, redirect, useNavigation, useSubmit, Link } fr
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { authApi, LoginParams, LoginParamsSchema, JWT } from '../redux/services/auth.ts';
+import { authApi, LoginParams, LoginParamsSchema, JWT, useMeQuery } from '../redux/services/auth.ts';
 import { store } from '../redux/store.ts';
 import Spinner from '../components/Spinner.tsx';
 
@@ -35,6 +35,7 @@ export default function SignUp() {
     });
     const navigation = useNavigation();
     const submit = useSubmit();
+    const { data } = useMeQuery();
 
     const onSubmit: SubmitHandler<LoginParams> = (data) => {
         submit(data, {
@@ -50,36 +51,39 @@ export default function SignUp() {
                     <Spinner />
                 ) :
                 (
-                    <>
-                        <Form onSubmit={handleSubmit(onSubmit)} method="post" id="test-form">
-                            <p>
-                                <span>email</span>
-                                <input
-                                    placeholder="email"
-                                    aria-label="email"
-                                    defaultValue="test@email.com"
-                                    {...register("email")}
-                                />
-                                {errors.email?.message}
-                            </p>
-                            <p>
-                                <span>password</span>
-                                <input
-                                    placeholder="password"
-                                    aria-label="password"
-                                    type="password"
-                                    defaultValue="11111111"
-                                    {...register("password")}
-                                />
-                                {errors.password?.message}
-                            </p>
-                            <p>
-                                <button type="submit">Login</button>
-                            </p>
-                        </Form>
+                    data ?
+                        <Link to='/dashboard'>go to dashboard</Link>
+                        :
+                        <>
+                            <Form onSubmit={handleSubmit(onSubmit)} method="post" id="test-form">
+                                <p>
+                                    <span>email</span>
+                                    <input
+                                        placeholder="email"
+                                        aria-label="email"
+                                        defaultValue="test@email.com"
+                                        {...register("email")}
+                                    />
+                                    {errors.email?.message}
+                                </p>
+                                <p>
+                                    <span>password</span>
+                                    <input
+                                        placeholder="password"
+                                        aria-label="password"
+                                        type="password"
+                                        defaultValue="11111111"
+                                        {...register("password")}
+                                    />
+                                    {errors.password?.message}
+                                </p>
+                                <p>
+                                    <button type="submit">Login</button>
+                                </p>
+                            </Form>
 
-                        <Link to="/forgotPassword">forgot password</Link>
-                    </>
+                            <Link to="/forgotPassword">forgot password</Link>
+                        </>
 
                 )
             }
