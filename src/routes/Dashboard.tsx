@@ -15,7 +15,7 @@ export const dashboardLoader = async () => {
         } else {
             const refreshRes = await store.dispatch(authApi.endpoints.refresh.initiate());
 
-            if (res.status != 'rejected') {
+            if (refreshRes.status != 'rejected') {
                 localStorage.setItem(JWT, refreshRes.data?.access_token || '');
                 return redirect('/dashboard');
             }
