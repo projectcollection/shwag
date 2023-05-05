@@ -62,6 +62,9 @@ export const authApi = createApi({
                 body: data,
             }),
         }),
+        logoutUser: builder.query<{ status: string }, void>({
+            query: () => `logout`,
+        }),
         refresh: builder.query<{ status: string, access_token: string }, void>({
             query: () => ({
                 url: 'refresh',
@@ -99,5 +102,11 @@ export const userApi = createApi({
 //
 // note: seems this is the only way to get data directly when using rtk-query
 // store.getState() shows methods and such, not the data itself
-export const { useSignUpUserMutation, useLoginUserMutation, useVerifyMutation, useRefreshQuery } = authApi;
+export const {
+    useSignUpUserMutation,
+    useLoginUserMutation,
+    useVerifyMutation,
+    useRefreshQuery,
+    useLogoutUserQuery
+} = authApi;
 export const { useMeQuery } = userApi;

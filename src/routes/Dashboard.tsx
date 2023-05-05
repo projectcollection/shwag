@@ -15,7 +15,7 @@ export const dashboardLoader = async () => {
         } else {
             const refreshRes = await store.dispatch(authApi.endpoints.refresh.initiate());
 
-            if (res.data?.status != 'rejected') {
+            if (res.status != 'rejected') {
                 localStorage.setItem(JWT, refreshRes.data?.access_token || '');
                 return redirect('/dashboard');
             }
@@ -28,6 +28,7 @@ export const dashboardLoader = async () => {
 
 export async function logoutAction() {
     localStorage.removeItem(JWT);
+    await store.dispatch(authApi.endpoints.logoutUser.initiate());
     return redirect('/login');
 }
 
