@@ -4,12 +4,14 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import App from './App.tsx'
+import './index.css'
 import Signup, { signUpAction } from './routes/Signup.tsx'
 import Login, { loginAction } from './routes/Login.tsx'
 import Dashboard, { dashboardLoader, logoutAction } from './routes/Dashboard.tsx'
 import ErrorPage from './routes/ErrorPage.tsx'
 import Verification from './routes/Verification.tsx'
-import './index.css'
+import ForgotPassword, { forgotPasswordAction } from './routes/ForgotPassword.tsx';
+import ResetPassword, { resetPasswordAction } from './routes/ResetPassword.tsx'
 import { store } from './redux/store.ts';
 
 const router = createBrowserRouter([
@@ -37,6 +39,16 @@ const router = createBrowserRouter([
             {
                 path: '/verifyemail/:verificationCode',
                 element: <Verification/>
+            },
+            {
+                path: '/forgotPassword',
+                action: forgotPasswordAction,
+                element: <ForgotPassword/>
+            },
+            {
+                path: '/resetPassword/:resetToken',
+                action: resetPasswordAction,
+                element: <ResetPassword/>
             }
         ]
     },

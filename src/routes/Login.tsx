@@ -1,4 +1,4 @@
-import { Form, ActionFunctionArgs, redirect, useNavigation, useSubmit } from 'react-router-dom'
+import { Form, ActionFunctionArgs, redirect, useNavigation, useSubmit, Link } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -50,32 +50,37 @@ export default function SignUp() {
                     <Spinner />
                 ) :
                 (
-                    <Form onSubmit={handleSubmit(onSubmit)} method="post" id="test-form">
-                        <p>
-                            <span>email</span>
-                            <input
-                                placeholder="email"
-                                aria-label="email"
-                                defaultValue="test2@email.com"
-                                {...register("email")}
-                            />
-                            {errors.email?.message}
-                        </p>
-                        <p>
-                            <span>password</span>
-                            <input
-                                placeholder="password"
-                                aria-label="password"
-                                type="password"
-                                defaultValue="11111111"
-                                {...register("password")}
-                            />
-                            {errors.password?.message}
-                        </p>
-                        <p>
-                            <button type="submit">Login</button>
-                        </p>
-                    </Form>
+                    <>
+                        <Form onSubmit={handleSubmit(onSubmit)} method="post" id="test-form">
+                            <p>
+                                <span>email</span>
+                                <input
+                                    placeholder="email"
+                                    aria-label="email"
+                                    defaultValue="test@email.com"
+                                    {...register("email")}
+                                />
+                                {errors.email?.message}
+                            </p>
+                            <p>
+                                <span>password</span>
+                                <input
+                                    placeholder="password"
+                                    aria-label="password"
+                                    type="password"
+                                    defaultValue="11111111"
+                                    {...register("password")}
+                                />
+                                {errors.password?.message}
+                            </p>
+                            <p>
+                                <button type="submit">Login</button>
+                            </p>
+                        </Form>
+
+                        <Link to="/forgotPassword">forgot password</Link>
+                    </>
+
                 )
             }
         </>
