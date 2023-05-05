@@ -17,7 +17,7 @@ export async function signUpAction({ request }: ActionFunctionArgs) {
         if ('data' in res && res.data.status === 'success') {
             //todo: toast maybe
             alert('success');
-            //return redirect('/login');
+            return redirect('/login');
         } else {
             alert('fail');
         }
