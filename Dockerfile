@@ -5,15 +5,21 @@ WORKDIR /app
 COPY . .
 
 RUN npm install && npm run build
+RUN npm install -g serve
 
-FROM nginx:alpine AS deploy-stage
+RUN cp serve.json ./dist/serve.json
 
-WORKDIR /usr/share/nginx/html
+ENTRYPOINT ["serve", "-p", "80", "./dist/"]
 
-RUN rm -rf ./*
+#FROM nginx:alpine AS deploy-stage
+#
+#WORKDIR /usr/share/nginx/html
+#
+#RUN rm -rf ./*
+#
+#COPY --from=build-stage /app/dist/ .
+#COPY --from=build-stage /app/nginx.conf .
 
-COPY --from=build-stage /app/dist/ .
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+#ENTRYPOINT ["nginx", "-g", "daemon off;"]
 
 
